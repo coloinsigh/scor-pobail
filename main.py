@@ -1,6 +1,7 @@
 import osmnx as ox
 import geopandas as gp
 import networkx
+from src import visualization
 
 LOCATION = "Galway, Ireland"    # central point
 DISTANCE = 10000.0              # radius of circle in m
@@ -26,8 +27,11 @@ nearest_node_dedup = set(nearest_node)
 nearest = networkx.multi_source_dijkstra_path_length(g, sources=nearest_node_dedup, weight="length")
 
 # Unpack nodes into a geodataframe
-gdf_nodes = ox.graph_from_gdfs(g, edges=False)
+gdf_nodes = ox.graph_to_gdfs(g, edges=False)
 gdf_nodes['pitch_dist_m'] = gdf_nodes.index.map(nearest)
 
 # Now convert the metres to minutes, based on reasonable walking speed
 gdf_nodes['pitch_walk_min'] = gdf_nodes['pitch_dist_m']/SPEED
+
+# Visualize time to walk through a colourmap
+visualization.ox_native(g, nearest)
