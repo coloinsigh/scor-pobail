@@ -5,7 +5,7 @@
 
 ### Uirlis abhair sibhialta
 
-Is taiscéalíocht le haghaidh an am idir spásanna an repo seo. Tá rochtan riachtanas chun chathair feidhmiú - chaithfidh a bheith na riachtanas laethúla le fáil ar gach duine.  Is é an miain don uirlis seo chun léargas a cuir ar an am a tógann sé chun súil idir spásanna.
+Is taiscéalíocht le haghaidh an am idir spásanna an repo seo. Tá rochtan riachtanas chun chathair feidhmiú - chaithfadh a bheith na riachtanas laethúla le fáil ar gach duine.  Is é an miain don uirlis seo chun léargas a cuir ar an am a tógann sé chun súil idir spásanna.
 
 ### Civic distance tool
 
