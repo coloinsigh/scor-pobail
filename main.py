@@ -7,8 +7,9 @@ import matplotlib.colors as mcolors
 
 LOCATION = "Galway, Ireland"    # central point
 DISTANCE = 10000.0              # radius of circle in m
-SPEED = 5*1000/60             # assumed walking speed in m/min - 5km/h
+SPEED = 5*1000/60               # assumed walking speed in m/min - 5km/h
 MAX_DISTANCE = 5000.0
+MAX_MINS = 30.0
 
 
 def compute_edge_colours(nearest, g):
@@ -64,9 +65,6 @@ nearest = networkx.multi_source_dijkstra_path_length(g, sources=nearest_node_ded
 gdf_nodes = ox.graph_to_gdfs(g, edges=False)
 gdf_nodes['feature_dist_m'] = gdf_nodes.index.map(nearest).fillna(MAX_DISTANCE)
 
-# # Account for nodes which are distant - anything further than MAX_DISTANCE should be dropped
-# gd    f_nodes['feature_dist_m'] = gdf_nodes['feature_dist_m'].fillna(MAX_DISTANCE)
-
 # Now convert the metres to minutes, based on reasonable walking speed
 gdf_nodes['feature_walk_min'] = gdf_nodes['feature_dist_m']/SPEED
 
@@ -75,7 +73,7 @@ for node_id, val in gdf_nodes["feature_walk_min"].items():
     g.nodes[node_id]["walk_time"] = val
 
 # Handle edge colours
-edge_colours = compute_edge_colours(g, nearest)
+edge_colours = compute_edge_colours(nearest, g)
                                           
 # Visualize time to walk through a colourmap
 visualization.ox_native(g, nearest, edge_colours=edge_colours, edge_linewidth=1.2, node_size=0)

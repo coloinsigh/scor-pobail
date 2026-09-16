@@ -19,10 +19,16 @@ def ox_native(g, nearest, node_size = 15, edge_colours="#333333", edge_linewidth
     for node_id, dist in nearest.items():
         g.nodes[node_id]["dist_feature"] = dist
 
+    # # Prepare node colors: assign a fallback distance for disconnected nodes
+    # max_dist = max_dist_colour_scale  # Cap at 3 km for color scaling
+    # node_distances = [
+    #     data.get("dist_feature", max_dist) 
+    #     for _, data in g.nodes(data=True)
+    # ]
     # Prepare node colors: assign a fallback distance for disconnected nodes
     max_dist = max_dist_colour_scale  # Cap at 3 km for color scaling
     node_distances = [
-        data.get("dist_feature", max_dist) 
+        data.get("walk_time", max_dist) 
         for _, data in g.nodes(data=True)
     ]
 
