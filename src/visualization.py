@@ -4,16 +4,45 @@ import osmnx as ox
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import matplotlib.colors as mcolors
-import numpy as np
 
 """
 Collection of all tools to aid in visualization of graph data, either using osmnx or otherwise 
 """
 
-def ox_native(g, nearest, node_size = 15, edge_colours="#333333", edge_linewidth=0.5, max_dist_colour_scale=3000.0):
+
+def compute_edge_colours(nearest, g):
+    """
+    To aid with later visualization, transform the distance between nodes into an average value
+    """
+    # Ensure nearest dict values are in minutes
+    node_times = {
+    node: min(dist / SPEED, MAX_MINS)
+    for node, dist in nearest.items()
+    }
+
+    # Assign an average walk time to each edge
+    edge_times = []
+    for u, v in g.edges():
+        time_u = node_times.get(u, MAX_MINS)
+        time_v = node_times.get(v, MAX_MINS)
+        edge_times.append((time_u + time_v) / 2.0)
+
+    norm = mcolors.Normalize(vmin=0, vmax=MAX_MINS)
+    cmap = cm.viridis_r  # Green close, purple/dark far
+
+    edge_colors = [cmap(norm(t)) for t in edge_times]
+    return edge_colors
+
+
+
+def ox_native(g, nearest, node_size = 15, edge_colours=None, edge_linewidth=0.5, max_dist_colour_scale=3000.0):
     """
     Using a dict of nearest nodes, as output by networkx.multi_source_dijkstra_path_length(), plot a colourmap of time to walk
     """
+
+    # By default, compute edge colours as the mid time between two nodes
+    if not edge_colours:
+        edge_colours = compute_edge_colours(nearest, g)
 
     # Attach distances in meters to the graph
     for node_id, dist in nearest.items():
